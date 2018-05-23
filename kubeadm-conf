@@ -1,0 +1,17 @@
+   apiVersion: kubeadm.k8s.io/v1alpha1
+   kind: MasterConfiguration
+   api:
+     advertiseAddress: 172.17.8.101 
+   etcd:
+     endpoints:
+     - http://localhost:2379
+   networking:
+     podSubnet: 10.244.0.0/16 
+   apiServerCertSANs:
+   - "172.17.8.101"
+   - "172.17.8.102"
+   - "172.17.8.103"
+   - "127.0.0.1" 
+   apiServerExtraArgs:
+     apiserver-count: "3"
+   token: "6f1co5.lig2hweqruvys3dh"

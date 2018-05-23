@@ -23,7 +23,7 @@ IGNITION_CONFIG_PATH = File.join(File.dirname(__FILE__), "config.ign")
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
 
 # Defaults for config options defined in CONFIG
-$num_instances = 1
+$num_instances = 3
 $instance_name_prefix = "core"
 $enable_serial_logging = false
 $share_home = false
@@ -142,7 +142,7 @@ Vagrant.configure("2") do |config|
       config.ignition.ip = ip
 
       # Uncomment below to enable NFS for sharing the host machine into the coreos-vagrant VM.
-      #config.vm.synced_folder ".", "/home/core/share", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+      config.vm.synced_folder ".", "/home/core/share", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
       $shared_folders.each_with_index do |(host_folder, guest_folder), index|
         config.vm.synced_folder host_folder.to_s, guest_folder.to_s, id: "core-share%02d" % index, nfs: true, mount_options: ['nolock,vers=3,udp']
       end
@@ -150,6 +150,7 @@ Vagrant.configure("2") do |config|
       if $share_home
         config.vm.synced_folder ENV['HOME'], ENV['HOME'], id: "home", :nfs => true, :mount_options => ['nolock,vers=3,udp']
       end
+      config.vm.provision :shell, :path => "./install.sh", :privileged => true
 
       # This shouldn't be used for the virtualbox provider (it doesn't have any effect if it is though)
       if File.exist?(CLOUD_CONFIG_PATH)
